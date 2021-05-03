@@ -1,0 +1,38 @@
+exports.handler = async (event) => {
+    // TODO implement
+    const response = {
+        statusCode: 200,
+        body: JSON.stringify('Hello from Lambda!'),
+        
+        //Acciones de Ibm
+        IamAuthenticator authenticator = new IamAuthenticator(env.API_KEY);
+        NaturalLanguageUnderstanding naturalLanguageUnderstanding = new NaturalLanguageUnderstanding("2020-08-01", authenticator);
+        naturalLanguageUnderstanding.setServiceUrl(env.URL);
+
+
+        String url = "www.ibm.com";
+        
+        ConceptsOptions concepts= new ConceptsOptions.Builder()
+          .limit(3)
+          .build();
+        
+        Features features = new Features.Builder()
+          .concepts(concepts)
+          .build();
+        
+        AnalyzeOptions parameters = new AnalyzeOptions.Builder()
+          .url(url)
+          .features(features)
+          .build();
+        
+        AnalysisResults response = naturalLanguageUnderstanding
+          .analyze(parameters)
+          .execute()
+          .getResult();
+        System.out.println(response);
+
+        
+        
+    };
+    return response;
+};
